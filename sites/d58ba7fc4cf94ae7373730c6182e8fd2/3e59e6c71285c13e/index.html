@@ -1,0 +1,182 @@
+
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Demo HTML Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #333;
+        }
+        .demo-section {
+            margin-bottom: 30px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .highlight {
+            background: #e9ecef;
+            padding: 10px;
+            border-left: 4px solid #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 Welcome to the Demo HTML Page</h1>
+            <p>This is a demonstration of various HTML elements and features.</p>
+        </header>
+
+        <section class="demo-section">
+            <h2>📝 Text Formatting</h2>
+            <p>This is a <strong>bold</strong> text and this is <em>italic</em> text.</p>
+            <p>You can create <mark>highlighted</mark> text and <del>strikethrough</del> text.</p>
+            <p>Use <code>&lt;code&gt;</code> tags for inline code snippets.</p>
+            <blockquote>
+                "This is a blockquote. Great for quotes or important information."
+            </blockquote>
+        </section>
+
+        <section class="demo-section">
+            <h2>📋 Lists</h2>
+            <h3>Unordered List:</h3>
+            <ul>
+                <li>HTML5</li>
+                <li>CSS3</li>
+                <li>JavaScript</li>
+            </ul>
+
+            <h3>Ordered List:</h3>
+            <ol>
+                <li>First item</li>
+                <li>Second item</li>
+                <li>Third item</li>
+            </ol>
+        </section>
+
+        <section class="demo-section">
+            <h2>🔗 Links and Buttons</h2>
+            <p><a href="https://www.example.com" target="_blank">Visit Example.com</a></p>
+            <button>Click Me!</button>
+            <button>Change Background</button>
+        </section>
+
+        <section class="demo-section">
+            <h2>📊 Table Example</h2>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Age</th>
+                        <th>City</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>John Doe</td>
+                        <td>30</td>
+                        <td>New York</td>
+                    </tr>
+                    <tr>
+                        <td>Jane Smith</td>
+                        <td>25</td>
+                        <td>London</td>
+                    </tr>
+                    <tr>
+                        <td>Bob Johnson</td>
+                        <td>35</td>
+                        <td>Tokyo</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="demo-section">
+            <h2>📝 Form Example</h2>
+            <form>
+                <label>Name:</label><br />
+                <input type="text" id="name" name="name" required /><br /><br />
+
+                <label>Email:</label><br />
+                <input type="email" id="email" name="email" required /><br /><br />
+
+                <label>Message:</label><br />
+                <textarea id="message" name="message" rows="4" cols="50"></textarea><br /><br />
+
+                <input type="submit" value="Submit" />
+            </form>
+        </section>
+
+        <section class="demo-section">
+            <h2>🖼️ Images and Media</h2>
+            <img src="https://via.placeholder.com/300x200/007bff/ffffff?text=Demo+Image" alt="Demo Image" />
+            <p>Above is a placeholder image demonstrating responsive design.</p>
+        </section>
+
+        <div class="highlight">
+            <h2>✨ Interactive Features</h2>
+            <p id="demo-text">This text will change when you interact with the page!</p>
+            <p>Current time: <span id="current-time"></span></p>
+        </div>
+    </div>
+
+    <span>
+        function showAlert() {
+            alert('Hello! You clicked the button.');
+        }
+
+        function changeColor() {
+            document.body.style.backgroundColor = document.body.style.backgroundColor === 'lightblue' ? '#f4f4f4' : 'lightblue';
+        }
+
+        function handleSubmit(event) {
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            alert(`Thank you, ${name}! We'll contact you at ${email}.`);
+            document.getElementById('name').value = '';
+            document.getElementById('email').value = '';
+            document.getElementById('message').value = '';
+        }
+
+        // Update time every second
+        function updateTime() {
+            document.getElementById('current-time').textContent = new Date().toLocaleTimeString();
+        }
+
+        // Change demo text on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('demo-text').textContent = 'Page loaded successfully! Try the interactive buttons above.';
+            updateTime();
+            setInterval(updateTime, 1000);
+        });
+    </span>
+</body>
+</html>

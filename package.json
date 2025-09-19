@@ -1,0 +1,44 @@
+{
+  "name": "tinny-host",
+  "version": "0.1.0",
+  "description": "Lightweight self-hosted static site hosting platform",
+  "main": "server.js",
+  "engines": {
+    "node": ">=18 <23"
+  },
+  "scripts": {
+    "start": "NODE_ENV=production node server.js",
+    "dev": "NODE_ENV=development nodemon server.js",
+    "test": "mocha",
+    "migrate": "node -e \"require('./db').initializeDatabase()\"",
+    "backup": "echo 'Backup functionality to be implemented in future tasks'"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "better-sqlite3": "^12.2.0",
+    "cookie-session": "^2.1.1",
+    "dotenv": "^17.2.2",
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.1.0",
+    "helmet": "^8.1.0",
+    "multer": "^2.0.2",
+    "sanitize-html": "^2.17.0",
+    "yauzl": "^3.2.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  },
+  "keywords": [
+    "static-hosting",
+    "self-hosted",
+    "nodejs",
+    "express",
+    "sqlite"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": ""
+  }
+}

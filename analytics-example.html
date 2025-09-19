@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics Feature Example</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .dashboard {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+        }
+        .btn {
+            padding: 8px 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: #fff;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .btn:hover {
+            background: #f0f0f0;
+        }
+        .btn-primary {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        .btn-primary:hover {
+            background: #0056b3;
+        }
+        .status {
+            margin: 20px 0;
+            padding: 12px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .status-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f1b0b7;
+        }
+    </style>
+</head>
+<body>
+    <h1>Analytics Feature Example</h1>
+    
+    <p>This page demonstrates the analytics feature that captures visitor information using Cloudflare Radar API.</p>
+    
+    <div class="dashboard">
+        <h3>Dashboard Actions</h3>
+        <p>Click the Analytics button to see visitor information collected from your IP address.</p>
+        <div class="actions">
+            <button id="open-analytics-btn" class="btn btn-primary" type="button">Analytics</button>
+            <button id="test-fetch" class="btn" type="button">Test Fetch</button>
+            <button id="clear-cache" class="btn" type="button">Clear Cache</button>
+        </div>
+    </div>
+
+    <div id="status" class="status status-info">
+        Analytics module is initializing...
+    </div>
+
+    <div>
+        <h3>How it works:</h3>
+        <ol>
+            <li>On page load, the module fetches your IP information from Cloudflare Radar API</li>
+            <li>It combines this with browser metadata (URL, referrer, user agent, etc.)</li>
+            <li>The data is cached in sessionStorage to avoid repeat calls</li>
+            <li>Optionally, it can POST the data to your backend endpoint</li>
+            <li>The Analytics button opens a popup showing all collected information</li>
+        </ol>
+        
+        <h3>Configuration:</h3>
+        <p>You can configure endpoints and behavior by passing options to <code>AnalyticsFeature.init()</code>:</p>
+        <ul>
+            <li><code>storageEndpoint</code>: Backend URL for storing visit records (default: "/api/analytics/visit")</li>
+            <li><code>proxyEndpoint</code>: CORS fallback proxy (default: "/api/analytics/ipinfo-proxy")</li>
+            <li><code>buttonSelector</code>: CSS selector for the Analytics button (default: "#open-analytics-btn")</li>
+        </ul>
+    </div>
+
+    <!-- Load the analytics module -->
+    <script src="analytics.js"></script>
+    
+    <script>
+        // Initialize analytics feature
+        document.addEventListener('DOMContentLoaded', async () => {
+            const statusEl = document.getElementById('status');
+            
+            try {
+                // Initialize with custom config
+                await AnalyticsFeature.init({
+                    storageEndpoint: null, // Disable backend storage for this demo
+                    buttonSelector: '#open-analytics-btn'
+                });
+                
+                statusEl.textContent = 'Analytics module initialized successfully! Click the Analytics button to see visitor data.';
+                statusEl.className = 'status status-info';
+                
+            } catch (error) {
+                statusEl.textContent = `Analytics initialization failed: ${error.message}`;
+                statusEl.className = 'status status-error';
+                console.error('Analytics init error:', error);
+            }
+        });
+
+        // Additional demo buttons
+        document.addEventListener('DOMContentLoaded', () => {
+            const testBtn = document.getElementById('test-fetch');
+            const clearBtn = document.getElementById('clear-cache');
+            const statusEl = document.getElementById('status');
+            
+            testBtn?.addEventListener('click', async () => {
+                statusEl.textContent = 'Testing Cloudflare fetch...';
+                try {
+                    const info = await AnalyticsFeature.fetchVisitorInfo();
+                    if (info) {
+                        statusEl.textContent = `Fetch successful! Got data for IP: ${info.ip_address || 'unknown'}`;
+                        statusEl.className = 'status status-info';
+                    } else {
+                        statusEl.textContent = 'Fetch returned no data (possibly due to CORS or network issues)';
+                        statusEl.className = 'status status-error';
+                    }
+                } catch (error) {
+                    statusEl.textContent = `Fetch failed: ${error.message}`;
+                    statusEl.className = 'status status-error';
+                }
+            });
+            
+            clearBtn?.addEventListener('click', () => {
+                try {
+                    sessionStorage.removeItem('analytics_cf_info');
+                    statusEl.textContent = 'Session cache cleared. Refresh page to re-fetch data.';
+                    statusEl.className = 'status status-info';
+                } catch (error) {
+                    statusEl.textContent = `Failed to clear cache: ${error.message}`;
+                    statusEl.className = 'status status-error';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

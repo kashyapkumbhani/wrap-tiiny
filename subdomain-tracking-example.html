@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subdomain Analytics Auto-Tracking</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .config-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #007bff;
+        }
+        .demo-section {
+            background: #e8f5e8;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #28a745;
+        }
+        .status {
+            margin: 15px 0;
+            padding: 12px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 13px;
+        }
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .status-warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        .status-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        code {
+            background: #f1f3f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+        pre {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            border: 1px solid #e9ecef;
+        }
+        .btn {
+            padding: 8px 16px;
+            margin: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: #fff;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .btn-primary { background: #007bff; color: white; border-color: #007bff; }
+        .btn-success { background: #28a745; color: white; border-color: #28a745; }
+        .btn-info { background: #17a2b8; color: white; border-color: #17a2b8; }
+        .tracking-info {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 10px;
+            font-size: 14px;
+        }
+        .tracking-info .label { font-weight: 600; color: #555; }
+        .tracking-info .value { color: #111; word-break: break-word; }
+    </style>
+</head>
+<body>
+    <h1>🚀 Subdomain Analytics Auto-Tracking</h1>
+    
+    <p>This page demonstrates automatic visitor tracking across subdomains. The analytics script starts tracking as soon as it loads!</p>
+    
+    <div class="config-section">
+        <h3>📋 Current Configuration</h3>
+        <div id="config-display">Loading configuration...</div>
+        
+        <h4>Global Configuration (Optional)</h4>
+        <p>You can set global config before loading the script:</p>
+        <pre><code>&lt;script&gt;
+window.ANALYTICS_CONFIG = {
+    storageEndpoint: '/api/analytics/visit',
+    trackingDelay: 500,
+    respectDoNotTrack: true,
+    trackLocalhost: false,
+    enablePopup: true  // Enable analytics popup
+};
+&lt;/script&gt;
+&lt;script src="analytics.js"&gt;&lt;/script&gt;</code></pre>
+    </div>
+    
+    <div class="demo-section">
+        <h3>🎯 Live Tracking Status</h3>
+        <div id="tracking-status" class="status status-info">Initializing auto-tracking...</div>
+        
+        <div id="current-data" class="tracking-info"></div>
+        
+        <div style="margin-top: 20px;">
+            <button id="show-analytics" class="btn btn-primary">📊 Show Analytics Popup</button>
+            <button id="manual-track" class="btn btn-success">🔄 Manual Track</button>
+            <button id="check-state" class="btn btn-info">🔍 Check State</button>
+            <button id="clear-session" class="btn">🗑️ Clear Session</button>
+        </div>
+    </div>
+
+    <div class="config-section">
+        <h3>🌍 Subdomain Testing</h3>
+        <p>Test the analytics across different subdomains (you would need to set up actual subdomains):</p>
+        <ul>
+            <li><strong>Main site:</strong> example.com</li>
+            <li><strong>Blog:</strong> blog.example.com</li>
+            <li><strong>API docs:</strong> docs.example.com</li>
+            <li><strong>Shop:</strong> shop.example.com</li>
+        </ul>
+        <p>Each subdomain will be tracked separately but share session data if configured.</p>
+    </div>
+
+    <div class="config-section">
+        <h3>🔧 How It Works</h3>
+        <ol>
+            <li><strong>Auto-initialization:</strong> Script runs immediately when loaded</li>
+            <li><strong>Visitor Detection:</strong> Checks if visitor already tracked this session</li>
+            <li><strong>Data Collection:</strong> Fetches IP info from Cloudflare + browser metadata</li>
+            <li><strong>Subdomain Tracking:</strong> Extracts subdomain and tracks visit type</li>
+            <li><strong>Backend Storage:</strong> POSTs data to your endpoint (configurable)</li>
+            <li><strong>Session Management:</strong> Avoids duplicate tracking within same session</li>
+        </ol>
+        
+        <h4>🛡️ Privacy Features</h4>
+        <ul>
+            <li>Respects Do Not Track (DNT) headers</li>
+            <li>Session-based deduplication</li>
+            <li>Graceful error handling</li>
+            <li>No tracking on localhost by default</li>
+        </ul>
+    </div>
+
+    <div class="config-section">
+        <h3>📊 Data Collected Per Visit</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div>
+                <h4>Cloudflare Data:</h4>
+                <ul>
+                    <li>IP address & version</li>
+                    <li>Geolocation (country, region, city)</li>
+                    <li>ASN & ISP information</li>
+                    <li>Cloudflare PoP (colo)</li>
+                </ul>
+            </div>
+            <div>
+                <h4>Browser Data:</h4>
+                <ul>
+                    <li>URL & hostname</li>
+                    <li>Subdomain extraction</li>
+                    <li>Referrer & visit type</li>
+                    <li>User agent, language, timezone</li>
+                    <li>Screen & viewport size</li>
+                    <li>Session ID & timestamp</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Configure analytics BEFORE loading the script -->
+    <script>
+        // Global configuration (optional)
+        window.ANALYTICS_CONFIG = {
+            storageEndpoint: null, // Disable backend for demo
+            trackingDelay: 200,    // Short delay for demo
+            respectDoNotTrack: true,
+            trackLocalhost: true,  // Enable for localhost demo
+            enablePopup: true      // Enable popup functionality
+        };
+    </script>
+    
+    <!-- Load analytics script - it will auto-initialize -->
+    <script src="analytics.js"></script>
+    
+    <script>
+        // Demo page functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            updateConfigDisplay();
+            updateTrackingStatus();
+            setupButtons();
+            
+            // Check tracking status periodically
+            setInterval(updateTrackingStatus, 2000);
+        });
+        
+        function updateConfigDisplay() {
+            const config = window.ANALYTICS_CONFIG;
+            const configEl = document.getElementById('config-display');
+            configEl.innerHTML = `
+                <div class="tracking-info">
+                    <div class="label">Storage Endpoint:</div>
+                    <div class="value">${config.storageEndpoint || 'Disabled (demo mode)'}</div>
+                    <div class="label">Tracking Delay:</div>
+                    <div class="value">${config.trackingDelay}ms</div>
+                    <div class="label">Respect DNT:</div>
+                    <div class="value">${config.respectDoNotTrack ? 'Yes' : 'No'}</div>
+                    <div class="label">Track Localhost:</div>
+                    <div class="value">${config.trackLocalhost ? 'Yes' : 'No'}</div>
+                    <div class="label">Enable Popup:</div>
+                    <div class="value">${config.enablePopup ? 'Yes' : 'No'}</div>
+                </div>
+            `;
+        }
+        
+        function updateTrackingStatus() {
+            const statusEl = document.getElementById('tracking-status');
+            const dataEl = document.getElementById('current-data');
+            
+            try {
+                const state = AnalyticsFeature.getState();
+                const subdomain = AnalyticsFeature.getSubdomain();
+                const sessionId = AnalyticsFeature.getSessionId();
+                
+                if (state.visitorInfo) {
+                    statusEl.textContent = '✅ Visitor tracked successfully!';
+                    statusEl.className = 'status status-success';
+                    
+                    dataEl.innerHTML = `
+                        <div class="label">Current URL:</div>
+                        <div class="value">${window.location.href}</div>
+                        <div class="label">Hostname:</div>
+                        <div class="value">${window.location.hostname}</div>
+                        <div class="label">Subdomain:</div>
+                        <div class="value">${subdomain || '(none - main domain)'}</div>
+                        <div class="label">Session ID:</div>
+                        <div class="value">${sessionId}</div>
+                        <div class="label">IP Address:</div>
+                        <div class="value">${state.visitorInfo.ip_address || 'Not available'}</div>
+                        <div class="label">Location:</div>
+                        <div class="value">${state.visitorInfo.city || 'Unknown'}, ${state.visitorInfo.country || 'Unknown'}</div>
+                        <div class="label">Last Error:</div>
+                        <div class="value">${state.lastError ? state.lastError.message : 'None'}</div>
+                    `;
+                } else {
+                    statusEl.textContent = '⏳ Fetching visitor information...';
+                    statusEl.className = 'status status-warning';
+                    
+                    dataEl.innerHTML = `
+                        <div class="label">Status:</div>
+                        <div class="value">Loading...</div>
+                        <div class="label">Session ID:</div>
+                        <div class="value">${sessionId}</div>
+                    `;
+                }
+            } catch (error) {
+                statusEl.textContent = `❌ Error: ${error.message}`;
+                statusEl.className = 'status status-error';
+            }
+        }
+        
+        function setupButtons() {
+            document.getElementById('show-analytics')?.addEventListener('click', () => {
+                AnalyticsFeature.openPopup();
+            });
+            
+            document.getElementById('manual-track')?.addEventListener('click', async () => {
+                const statusEl = document.getElementById('tracking-status');
+                statusEl.textContent = '⏳ Manual tracking in progress...';
+                statusEl.className = 'status status-info';
+                
+                try {
+                    await AnalyticsFeature.trackVisitor();
+                    updateTrackingStatus();
+                } catch (error) {
+                    statusEl.textContent = `❌ Manual tracking failed: ${error.message}`;
+                    statusEl.className = 'status status-error';
+                }
+            });
+            
+            document.getElementById('check-state')?.addEventListener('click', () => {
+                const state = AnalyticsFeature.getState();
+                console.log('Analytics State:', state);
+                alert('Analytics state logged to console. Check developer tools.');
+            });
+            
+            document.getElementById('clear-session')?.addEventListener('click', () => {
+                sessionStorage.clear();
+                alert('Session storage cleared. Refresh page to re-track.');
+            });
+        }
+    </script>
+</body>
+</html>

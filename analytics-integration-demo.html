@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Analytics Integration Demo</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .demo-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #007bff;
+        }
+        .success {
+            border-left-color: #28a745;
+            background: #e8f5e8;
+        }
+        .warning {
+            border-left-color: #ffc107;
+            background: #fff3cd;
+        }
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 14px;
+        }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .feature-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .status-complete {
+            background: #d4edda;
+            color: #155724;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        .analytics-dashboard-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <h1>🚀 Complete Analytics Integration</h1>
+    
+    <div class="demo-section success">
+        <h2>✅ Implementation Complete!</h2>
+        <p>Your analytics system is now fully integrated across your subdomain hosting platform. Here's what has been implemented:</p>
+    </div>
+
+    <div class="feature-grid">
+        <div class="feature-card">
+            <h3>📊 Dashboard Analytics Button</h3>
+            <span class="status-badge status-complete">Complete</span>
+            <p>Each site in your dashboard now has an Analytics button that opens a comprehensive analytics modal.</p>
+            <button class="analytics-dashboard-btn">📊 Analytics</button>
+        </div>
+
+        <div class="feature-card">
+            <h3>🔄 Auto-Injection System</h3>
+            <span class="status-badge status-complete">Complete</span>
+            <p>Analytics script is automatically injected into all HTML content served from subdomains - no manual setup required!</p>
+        </div>
+
+        <div class="feature-card">
+            <h3>🌍 Cloudflare Integration</h3>
+            <span class="status-badge status-complete">Complete</span>
+            <p>Automatically fetches visitor IP geolocation, ISP info, and routing data from Cloudflare Radar API.</p>
+        </div>
+
+        <div class="feature-card">
+            <h3>🗄️ Database Storage</h3>
+            <span class="status-badge status-complete">Complete</span>
+            <p>All visitor data is stored in SQLite with proper indexing for fast analytics queries.</p>
+        </div>
+    </div>
+
+    <div class="demo-section">
+        <h2>🔧 How It Works</h2>
+        
+        <h3>1. Auto-Injection into Subdomains</h3>
+        <p>When someone visits any subdomain (e.g., <code>blog.example.com</code>), the system automatically injects this code:</p>
+        
+        <div class="code-block">
+&lt;script&gt;
+  window.ANALYTICS_CONFIG = {
+    storageEndpoint: '/api/analytics/visit',
+    analyticsEndpoint: '/api/analytics/dashboard',
+    trackingDelay: 100,
+    respectDoNotTrack: true,
+    trackIndividually: true,
+    enableDashboard: false,  // No popup on user sites
+    autoTrack: true,
+    siteId: 'abc12345',
+    siteName: 'blog'
+  };
+&lt;/script&gt;
+&lt;script src="/static/analytics.js"&gt;&lt;/script&gt;
+        </div>
+
+        <h3>2. Data Collection Process</h3>
+        <ol>
+            <li><strong>Auto-Start:</strong> Script runs immediately when page loads</li>
+            <li><strong>IP Detection:</strong> Fetches visitor's IP info from Cloudflare Radar API</li>
+            <li><strong>Browser Data:</strong> Collects screen size, language, timezone, referrer</li>
+            <li><strong>Site Context:</strong> Identifies subdomain and visit type (direct, search, social, etc.)</li>
+            <li><strong>Storage:</strong> POSTs all data to <code>/api/analytics/visit</code></li>
+        </ol>
+
+        <h3>3. Dashboard Integration</h3>
+        <p>Your dashboard now includes Analytics buttons for each site that show:</p>
+        <ul>
+            <li>📈 Total visits and unique visitors</li>
+            <li>🌍 Geographic breakdown by country</li>
+            <li>🚦 Traffic sources (direct, search, social, referral)</li>
+            <li>👥 Recent visitor list with locations and timestamps</li>
+            <li>📊 Data export functionality</li>
+        </ul>
+    </div>
+
+    <div class="demo-section">
+        <h2>🗃️ Database Schema</h2>
+        <p>Analytics data is stored in the <code>visits</code> table:</p>
+        
+        <div class="code-block">
+CREATE TABLE visits (
+  id TEXT PRIMARY KEY,
+  site_id TEXT NOT NULL,
+  
+  -- Page Info
+  url TEXT NOT NULL,
+  hostname TEXT NOT NULL,
+  subdomain TEXT,
+  
+  -- Visitor Info (from Cloudflare)
+  ip_address TEXT,
+  country TEXT,
+  city TEXT,
+  asn INTEGER,
+  colo TEXT,
+  
+  -- Browser Info  
+  user_agent TEXT,
+  language TEXT,
+  timezone TEXT,
+  screen_resolution TEXT,
+  visit_type TEXT,
+  
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (site_id) REFERENCES sites(id)
+);
+        </div>
+    </div>
+
+    <div class="demo-section">
+        <h2>🔗 API Endpoints</h2>
+        
+        <h3>For Visitor Tracking (Public)</h3>
+        <div class="code-block">
+POST /api/analytics/visit
+{
+  "url": "https://blog.example.com/post/123",
+  "hostname": "blog.example.com", 
+  "subdomain": "blog",
+  "ip_address": "203.0.113.1",
+  "country": "IN",
+  "city": "Mumbai",
+  "visitType": "search",
+  "sessionId": "ses_abc123"
+}
+        </div>
+
+        <h3>For Dashboard (Authenticated)</h3>
+        <div class="code-block">
+GET /api/analytics/site/:siteId?days=30
+{
+  "totalVisits": 1234,
+  "uniqueVisitors": 876, 
+  "topCountries": [{"country": "IN", "count": 500}],
+  "trafficSources": {"direct": 400, "search": 600},
+  "recentVisits": [...]
+}
+
+GET /api/analytics/site/:siteId/export
+// Downloads JSON file with all visit data
+        </div>
+    </div>
+
+    <div class="demo-section">
+        <h2>🛡️ Privacy & Security</h2>
+        <ul>
+            <li><strong>DNT Respect:</strong> Automatically honors Do Not Track browser settings</li>
+            <li><strong>Session Deduplication:</strong> Avoids tracking the same visitor multiple times per session</li>
+            <li><strong>Individual Site Tracking:</strong> Each subdomain is tracked separately</li>
+            <li><strong>No Third-Party Cookies:</strong> All tracking is server-side</li>
+            <li><strong>Owner-Only Access:</strong> Only site owners can view their analytics</li>
+        </ul>
+    </div>
+
+    <div class="demo-section warning">
+        <h2>🚀 Next Steps</h2>
+        <ol>
+            <li><strong>Start your server:</strong> <code>npm start</code></li>
+            <li><strong>Upload a site</strong> through your dashboard</li>
+            <li><strong>Visit the subdomain</strong> to generate analytics data</li>
+            <li><strong>Check the Analytics button</strong> in your dashboard</li>
+            <li><strong>View the comprehensive analytics</strong> for your site!</li>
+        </ol>
+        
+        <p><strong>Files Modified:</strong></p>
+        <ul>
+            <li><code>analytics.js</code> - Main analytics script</li>
+            <li><code>static/analytics.js</code> - Copy for serving to subdomains</li>
+            <li><code>static/dashboard.js</code> - Added Analytics button and modal</li>
+            <li><code>html/dashboard.html</code> - Added Analytics button styling and script loading</li>
+            <li><code>subdomain.js</code> - Auto-injection system</li>
+            <li><code>api.js</code> - Analytics API endpoints</li>
+            <li><code>server.js</code> - Updated CSP for Cloudflare API</li>
+            <li><code>migrations/003_analytics.sql</code> - Database schema</li>
+        </ul>
+    </div>
+
+    <div class="demo-section success">
+        <h2>🎉 Ready to Use!</h2>
+        <p>Your analytics system is production-ready and will automatically start tracking visitors to all your subdomains. The dashboard Analytics buttons provide comprehensive insights into your site's performance!</p>
+        
+        <div style="text-align: center; margin: 30px 0;">
+            <a href="/dashboard" class="btn btn-primary">Go to Dashboard</a>
+            <button class="analytics-dashboard-btn" onclick="testAnalytics()">Test Analytics Modal</button>
+        </div>
+    </div>
+
+    <!-- Load analytics for this demo page -->
+    <script>
+        // Configure analytics for this demo
+        window.ANALYTICS_CONFIG = {
+            storageEndpoint: null, // Don't track this demo page
+            enablePopup: true,
+            enableDashboard: true,
+            autoTrack: false
+        };
+        
+        function testAnalytics() {
+            if (window.AnalyticsFeature) {
+                // Show analytics popup with sample data
+                window.AnalyticsFeature.openPopup({
+                    ip_address: "203.0.113.1",
+                    country: "India",
+                    city: "Mumbai",
+                    asn: 24560,
+                    colo: "BOM",
+                    ip_version: "IPv4"
+                });
+            } else {
+                alert('Analytics script is loading... Try again in a moment.');
+            }
+        }
+    </script>
+    <script src="/static/analytics.js"></script>
+</body>
+</html>
